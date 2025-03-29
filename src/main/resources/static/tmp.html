@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解忧小狗</title>
+    <!-- Adding Noto Sans SC for better Chinese character rendering -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/zcool/fonts@master/ZCOOL-Happy/ZCOOL-Happy.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF9E7D;
+            /* warm coral */
+            --secondary: #7DCFB6;
+            /* teal */
+            --accent: #FBD87F;
+            /* soft yellow */
+            --background: #FFF5EE;
+            /* creamy white */
+            --text: #5D5C61;
+            /* dark gray */
+            --success: #B5EAD7;
+            /* mint green */
+            --warning: #FFB7B2;
+            /* light coral */
+            --error: #FF6B6B;
+            /* light red */
+
+            /* Puppy colors based on the image */
+            --puppy-main: #E6D2B5;
+            /* light beige */
+            --puppy-dark: #A68267;
+            /* brown */
+            --puppy-nose: #333333;
+            /* dark gray/black */
+            --puppy-cheeks: #FFCCD0;
+            /* light pink */
+            --puppy-collar: #FFD700;
+            /* gold */
+            --puppy-tag: #C0C0C0;
+            /* silver */
+
+            /* Dark mode variables */
+            --dark-primary: #FF7F50;
+            /* darker coral */
+            --dark-secondary: #3A9188;
+            /* darker teal */
+            --dark-accent: #E6C158;
+            /* darker yellow */
+            --dark-background: #2D3142;
+            /* dark blue-gray */
+            --dark-surface: #424657;
+            /* lighter dark blue-gray */
+            --dark-text: #F0F2F5;
+            /* off-white */
+        }
+
+        .dark {
+            --primary: var(--dark-primary);
+            --secondary: var(--dark-secondary);
+            --accent: var(--dark-accent);
+            --background: var(--dark-background);
+            --text: var(--dark-text);
+        }
+
+        .dark .login-form,
+        .dark .register-form,
+        .dark .venting-container,
+        .dark .settings-container,
+        .dark .history-item,
+        .dark .nav-btn {
+            background-color: var(--dark-surface);
+            color: var(--dark-text);
+        }
+
+        .dark .input-group input,
+        .dark .venting-textarea,
+        .dark .settings-group input {
+            background-color: var(--dark-background);
+            color: var(--dark-text);
+            border-color: var(--dark-secondary);
+        }
+
+        .dark .app-title,
+        .dark .venting-title,
+        .dark .history-title,
+        .dark .settings-title,
+        .dark .register-title {
+            color: var(--dark-primary);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Primary font stack includes Comic Sans for English and Noto Sans SC for Chinese */
+            font-family: 'ZCOOL Happy', 'FZMiaoWoo', 'Comic Sans MS', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Login and Register Screens */
+        .login-form,
+        .register-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-form:hover,
+        .register-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .app-title,
+        .register-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:hover {
+            background-color: #FFB6C1;
+            transform: scale(1.03);
+        }
+
+        .btn:active:after {
+            animation: ripple 0.6s ease-out;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6BBAA7;
+        }
+
+        .btn-danger {
+            background-color: var(--error);
+            margin-top: 20px;
+        }
+
+        .btn-danger:hover {
+            background-color: #FF5252;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(30, 30);
+                opacity: 0;
+            }
+        }
+
+        /* Main Screen */
+        .main-screen {
+            position: relative;
+        }
+
+        .puppy-container {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            margin: 20px auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .puppy-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Cartoon Puppy Style (based on the image) */
+        .cartoon-puppy {
+            width: 220px;
+            height: 220px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        /* Puppy body */
+        .puppy-body {
+            width: 140px;
+            height: 120px;
+            background-color: var(--puppy-main);
+            border-radius: 70px 70px 60px 60px;
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            z-index: 1;
+        }
+
+        /* Puppy head */
+        .puppy-head {
+            width: 140px;
+            height: 130px;
+            background-color: var(--puppy-main);
+            border-radius: 70px;
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            z-index: 3;
+            overflow: visible;
+        }
+
+        /* Brown patch on head */
+        .puppy-patch {
+            width: 70px;
+            height: 130px;
+            background-color: var(--puppy-dark);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 3;
+            border-radius: 70px 0 0 70px;
+        }
+
+        /* Puppy ears */
+        .puppy-ear-left,
+        .puppy-ear-right {
+            width: 45px;
+            height: 60px;
+            background-color: var(--puppy-dark);
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-radius: 20px;
+        }
+
+        .puppy-ear-left {
+            left: 30px;
+            transform: rotate(-10deg);
+            animation: ear-flop-left 5s infinite alternate ease-in-out;
+        }
+
+        .puppy-ear-right {
+            right: 30px;
+            background-color: var(--puppy-main);
+            transform: rotate(10deg);
+            animation: ear-flop-right 7s infinite alternate ease-in-out;
+        }
+
+        @keyframes ear-flop-left {
+
+            0%,
+            85%,
+            100% {
+                transform: rotate(-10deg);
+            }
+
+            30%,
+            60% {
+                transform: rotate(-15deg) translateY(2px);
+            }
+
+            45% {
+                transform: rotate(-5deg) translateY(-2px);
+            }
+        }
+
+        @keyframes ear-flop-right {
+
+            0%,
+            85%,
+            100% {
+                transform: rotate(10deg);
+            }
+
+            30%,
+            60% {
+                transform: rotate(15deg) translateY(2px);
+            }
+
+            45% {
+                transform: rotate(5deg) translateY(-2px);
+            }
+        }
+
+        /* Puppy eyes */
+        .puppy-eye-left,
+        .puppy-eye-right {
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50px;
+            z-index: 5;
+            animation: blink 4s infinite;
+        }
+
+        .puppy-eye-left {
+            left: 55px;
+        }
+
+        .puppy-eye-right {
+            right: 55px;
+        }
+
+        /* Puppy cheeks */
+        .puppy-cheek-left,
+        .puppy-cheek-right {
+            width: 20px;
+            height: 15px;
+            background-color: var(--puppy-cheeks);
+            border-radius: 50%;
+            position: absolute;
+            top: 65px;
+            z-index: 4;
+            opacity: 0.7;
+        }
+
+        .puppy-cheek-left {
+            left: 35px;
+        }
+
+        .puppy-cheek-right {
+            right: 35px;
+        }
+
+        /* Puppy nose */
+        .puppy-nose {
+            width: 16px;
+            height: 12px;
+            background-color: var(--puppy-nose);
+            border-radius: 50%;
+            position: absolute;
+            top: 80px;
+            left: 62px;
+            z-index: 5;
+        }
+
+        /* Puppy mouth */
+        .puppy-mouth {
+            width: 40px;
+            height: 20px;
+            border-bottom: 3px solid #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 90px;
+            left: 50px;
+            z-index: 5;
+        }
+
+        /* Puppy collar */
+        .puppy-collar {
+            width: 60px;
+            height: 12px;
+            background-color: var(--puppy-collar);
+            position: absolute;
+            bottom: 120px;
+            left: 80px;
+            z-index: 4;
+            border-radius: 6px;
+        }
+
+        /* Puppy tag */
+        .puppy-tag {
+            width: 15px;
+            height: 15px;
+            background-color: var(--puppy-tag);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 105px;
+            left: 102px;
+            z-index: 5;
+        }
+
+        /* Puppy tail */
+        .puppy-tail {
+            width: 30px;
+            height: 40px;
+            background-color: var(--puppy-dark);
+            position: absolute;
+            bottom: 70px;
+            right: 30px;
+            border-radius: 15px;
+            transform-origin: bottom left;
+            transform: rotate(30deg);
+            z-index: 0;
+            animation: tail-wag 0.5s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        @keyframes tail-wag {
+            0% {
+                transform: rotate(30deg);
+            }
+
+            100% {
+                transform: rotate(70deg);
+            }
+        }
+
+        /* Puppy legs */
+        .puppy-leg-front,
+        .puppy-leg-back {
+            width: 20px;
+            height: 30px;
+            background-color: var(--puppy-main);
+            position: absolute;
+            bottom: 30px;
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        .puppy-leg-front {
+            left: 60px;
+        }
+
+        .puppy-leg-back {
+            right: 60px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            90%,
+            100% {
+                transform: scaleY(1);
+                height: 20px;
+            }
+
+            95% {
+                transform: scaleY(0.1);
+                height: 2px;
+            }
+        }
+
+        /* Happy bounce animation */
+        .puppy-happy {
+            animation: happy-bounce 0.5s 3 cubic-bezier(0.28, 0.84, 0.42, 1);
+        }
+
+        @keyframes happy-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px) scale(1.05);
+            }
+        }
+
+        /* Listening animation */
+        .puppy-listening {
+            animation: head-tilt 1.5s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        @keyframes head-tilt {
+            0% {
+                transform: rotate(-8deg);
+            }
+
+            100% {
+                transform: rotate(8deg);
+            }
+        }
+
+        /* Jumping animation */
+        .puppy-jumping {
+            animation: jump 0.6s ease-in-out;
+        }
+
+        @keyframes jump {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+        /* Sad animation */
+        .puppy-sad .puppy-mouth {
+            border-top: 3px solid #333;
+            border-bottom: none;
+            top: 95px;
+        }
+
+        .puppy-sad .puppy-eye-left,
+        .puppy-sad .puppy-eye-right {
+            height: 25px;
+            border-radius: 50% 50% 50% 50%;
+            top: 60px;
+        }
+
+        .puppy-sad .puppy-ear-left,
+        .puppy-sad .puppy-ear-right {
+            transform: rotate(0) translateY(5px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                background-color 0.3s ease,
+                box-shadow 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            background-color: var(--primary);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 10px;
+            background-color: white;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background-color 0.3s ease,
+                box-shadow 0.3s ease;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.15) rotate(5deg);
+            background-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Venting Screen */
+        .venting-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .venting-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .venting-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .venting-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .venting-textarea:focus {
+            border-color: var(--primary);
+            transform: scale(1.01);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* History Screen */
+        .history-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .history-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .history-message {
+            background-color: var(--accent);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fade-in 0.6s forwards;
+        }
+
+        .history-list {
+            list-style: none;
+            width: 100%;
+        }
+
+        .history-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .history-item:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .history-item.resolved {
+            border-left: 5px solid var(--success);
+        }
+
+        .history-item.unresolved {
+            border-left: 5px solid var(--warning);
+        }
+
+        .history-content {
+            margin-bottom: 10px;
+        }
+
+        .history-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .history-advice {
+            font-style: italic;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+        }
+
+        .resolve-btn {
+            padding: 5px 10px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .resolve-btn:hover {
+            transform: scale(1.05);
+            background-color: #8BDFC7;
+        }
+
+        /* Settings Screen */
+        .settings-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .settings-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .settings-form {
+            width: 100%;
+        }
+
+        .settings-group {
+            margin-bottom: 15px;
+        }
+
+        .settings-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .settings-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .settings-group input:focus {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .fade-in {
+            animation: fade-in 0.6s forwards cubic-bezier(0.26, 0.86, 0.44, 0.985);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solution-bubble {
+            background-color: var(--accent);
+            padding: 15px;
+            border-radius: 20px;
+            margin-top: 20px;
+            position: relative;
+            max-width: 80%;
+            text-align: center;
+            font-size: 16px;
+            animation: pop-in 0.6s forwards cubic-bezier(0.26, 0.86, 0.44, 0.985);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .solution-bubble:after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent var(--accent) transparent;
+        }
+
+        @keyframes pop-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary);
+            transform: scale(1.1) rotate(-10deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: var(--primary);
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Screen transition animation */
+        @keyframes screen-transition-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen-transition {
+            animation: screen-transition-in 0.4s forwards cubic-bezier(0.26, 0.86, 0.44, 0.985);
+        }
+
+        /* Emotion buttons for puppy */
+        .emotion-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .emotion-btn {
+            padding: 8px 12px;
+            background-color: var(--accent);
+            color: var(--text);
+            border: none;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            font-weight: bold;
+        }
+
+        .emotion-btn:hover {
+            transform: scale(1.05);
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Error message */
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .solution-container {
+            padding: 15px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+/* Add this CSS for the example bubbles */
+.example-bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.example-title {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.example-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.example-bubble {
+    background-color: var(--accent);
+    padding: 8px 15px;
+    border-radius: 18px;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.example-bubble:hover {
+    transform: scale(1.05);
+}
+
+.example-bubble.sad {
+    background-color: var(--warning);
+}
+
+.example-bubble.happy {
+    background-color: var(--success);
+}
+
+        .delete-worry {
+            padding: 8px 12px;
+            background-color: var(--dark-secondary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="container">
+            <div class="login-form">
+                <h1 class="app-title">解忧小狗</h1>
+                <div class="error-message" id="login-error"></div>
+                <div class="input-group">
+                    <label for="email">真名</label>
+                    <input type="text" id="full-name" placeholder="输入您的真名">
+                </div>
+                <div class="input-group">
+                    <label for="email">用户名</label>
+                    <input type="text" id="email" placeholder="输入您的用户名">
+                </div>
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="输入您的密码">
+                </div>
+                <button id="login-btn" class="btn">登录</button>
+                <div class="form-footer">
+                    没有账号? <a id="go-to-register">注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="screen">
+        <div class="container">
+            <div class="register-form">
+                <h1 class="register-title">注册新账号</h1>
+                <div class="error-message" id="register-error"></div>
+                <div class="input-group">
+                    <label for="register-full-name">真名</label>
+                    <input type="text" id="register-fullname" placeholder="输入您的真名">
+                </div>
+                <div class="input-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" placeholder="输入您的用户名">
+                </div>
+                <div class="input-group">
+                    <label for="register-email">邮箱</label>
+                    <input type="email" id="register-email" placeholder="输入您的邮箱">
+                </div>
+                <div class="input-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" placeholder="输入您的密码">
+                </div>
+                <div class="input-group">
+                    <label for="register-confirm-password">确认密码</label>
+                    <input type="password" id="register-confirm-password" placeholder="再次输入您的密码">
+                </div>
+                <button id="register-btn" class="btn">注册</button>
+                <div class="form-footer">
+                    已有账号? <a id="go-to-login">登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="main-screen" class="screen">
+        <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
+        <div class="container">
+            <div class="puppy-container">
+                <!-- Completely redesigned cartoon puppy based on the image -->
+                <div class="cartoon-puppy" id="puppy">
+                    <div class="puppy-head"></div>
+                    <div class="puppy-patch"></div>
+                    <div class="puppy-ear-left"></div>
+                    <div class="puppy-ear-right"></div>
+                    <div class="puppy-eye-left"></div>
+                    <div class="puppy-eye-right"></div>
+                    <div class="puppy-cheek-left"></div>
+                    <div class="puppy-cheek-right"></div>
+                    <div class="puppy-nose"></div>
+                    <div class="puppy-mouth"></div>
+                    <div class="puppy-body"></div>
+                    <div class="puppy-collar"></div>
+                    <div class="puppy-tag"></div>
+                    <div class="puppy-tail"></div>
+                    <div class="puppy-leg-front"></div>
+                    <div class="puppy-leg-back"></div>
+                </div>
+            </div>
+
+            <!-- Emotion buttons for puppy -->
+            <div class="emotion-buttons">
+                <button class="emotion-btn" id="happy-btn">Happy</button>
+                <button class="emotion-btn" id="sad-btn">Sad</button>
+                <button class="emotion-btn" id="listening-btn">Listening</button>
+                <button class="emotion-btn" id="jumping-btn">Jumping</button>
+            </div>
+
+            <div id="solution-container" class="solution-container">有什么不顺或开心的事就和小狗说吧~~</div>
+
+            <!-- Add this HTML after the action-buttons div in the main-screen -->
+            <div class="action-buttons">
+                <button id="vent-btn" class="action-btn">记录心情</button>
+                <button id="resolve-btn" class="action-btn">心情列表</button>
+            </div>
+
+            <!-- Add example bubbles here -->
+            <div class="example-bubbles">
+                <div class="example-title">你可以这样和小狗分享:</div>
+                <div class="example-container">
+                    <div class="example-bubble sad">今天感觉很累...</div>
+                    <div class="example-bubble sad">我和朋友吵架了</div>
+                    <div class="example-bubble sad">工作压力好大</div>
+                    <div class="example-bubble happy">我今天很开心!</div>
+                    <div class="example-bubble happy">我完成了一个目标</div>
+                    <div class="example-bubble happy">收到了一个惊喜</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <div id="home-btn" class="nav-btn">🏠</div>
+                <div id="history-btn" class="nav-btn">📜</div>
+                <div id="settings-btn" class="nav-btn">⚙️</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Venting Screen -->
+    <div id="venting-screen" class="screen">
+        <div class="container">
+            <button class="back-btn">←</button>
+            <div class="venting-container">
+                <h2 class="venting-title">分享您的心情</h2>
+                <textarea id="venting-textarea" class="venting-textarea" placeholder="告诉小狗你的想法(只有你和小狗知道哦)..."></textarea>
+                <button id="submit-vent-btn" class="btn">和小狗分享</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Screen -->
+    <div id="history-screen" class="screen">
+        <div class="container">
+            <button class="back-btn">←</button>
+            <div class="history-container">
+                <h2 class="history-title">您的心情记录</h2>
+                <div class="history-message">
+                    <p>记录你的悲与喜吧~~</p>
+                </div>
+                <div id="good-job" class="history-message"></div>
+                <ul id="history-list" class="history-list">
+                    <!-- History items will be added here dynamically -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+        <div class="container">
+            <button class="back-btn">←</button>
+            <div class="settings-container">
+                <h2 class="settings-title">设置</h2>
+                <div class="settings-form">
+                    <div class="settings-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username-change" placeholder="更改用户名">
+                    </div>
+                    <div class="settings-group">
+                        <label for="email">用户名</label>
+                        <input type="text" id="email-change" placeholder="更改邮箱">
+                    </div>
+                    <div class="settings-group">
+                        <label for="new-password">新密码</label>
+                        <input type="password" id="new-password" placeholder="输入新密码">
+                    </div>
+                    <div class="settings-group">
+                        <label for="confirm-password">确认密码</label>
+                        <input type="password" id="confirm-password" placeholder="确认新密码">
+                    </div>
+                    <button id="save-settings-btn" class="btn">保存更改</button>
+                    <button id="logout-btn" class="btn btn-danger">退出登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script>
+        // App State
+        const state = {
+            currentScreen: 'login-screen',
+            user: null,
+            worries: [],
+            darkMode: false,
+            puppyEmotion: 'normal' // Default emotion
+        };
+
+        // DOM Elements
+        const screens = {
+            login: document.getElementById('login-screen'),
+            register: document.getElementById('register-screen'),
+            main: document.getElementById('main-screen'),
+            venting: document.getElementById('venting-screen'),
+            history: document.getElementById('history-screen'),
+            settings: document.getElementById('settings-screen')
+        };
+
+        const elements = {
+            loginBtn: document.getElementById('login-btn'),
+            registerBtn: document.getElementById('register-btn'),
+            goToRegister: document.getElementById('go-to-register'),
+            goToLogin: document.getElementById('go-to-login'),
+            ventBtn: document.getElementById('vent-btn'),
+            resolveBtn: document.getElementById('resolve-btn'),
+            submitVentBtn: document.getElementById('submit-vent-btn'),
+            ventingTextarea: document.getElementById('venting-textarea'),
+            historyList: document.getElementById('history-list'),
+            puppy: document.getElementById('puppy'),
+            solutionContainer: document.getElementById('solution-container'),
+            saveSettingsBtn: document.getElementById('save-settings-btn'),
+            logoutBtn: document.getElementById('logout-btn'),
+            homeBtn: document.getElementById('home-btn'),
+            historyBtn: document.getElementById('history-btn'),
+            settingsBtn: document.getElementById('settings-btn'),
+            darkModeToggle: document.getElementById('dark-mode-toggle'),
+            backBtns: document.querySelectorAll('.back-btn'),
+            // Emotion buttons
+            happyBtn: document.getElementById('happy-btn'),
+            sadBtn: document.getElementById('sad-btn'),
+            listeningBtn: document.getElementById('listening-btn'),
+            jumpingBtn: document.getElementById('jumping-btn'),
+            // Error messages
+            loginError: document.getElementById('login-error'),
+            registerError: document.getElementById('register-error')
+        };
+
+        // Local Storage Functions
+        function saveToLocalStorage() {
+            localStorage.setItem('worryReliefState', JSON.stringify({
+                user: state.user,
+                darkMode: state.darkMode
+            }));
+        }
+
+        function loadFromLocalStorage() {
+            const savedState = localStorage.getItem('worryReliefState');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                state.user = parsedState.user;
+                state.darkMode = parsedState.darkMode;
+
+                // Apply dark mode if it was enabled
+                if (state.darkMode) {
+                    document.body.classList.add('dark');
+                    elements.darkModeToggle.textContent = '☀️';
+                }
+
+                // If user was logged in, show main screen and fetch worries
+                if (state.user) {
+                    showScreen('main-screen');
+                    fetchUserWorries(state.user.id);
+                }
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.removeItem('worryReliefState');
+            state.user = null;
+            state.worries = [];
+        }
+
+        // Navigation Functions
+        function showScreen(screenId) {
+            // First apply transition class to the target screen
+            document.getElementById(screenId).classList.add('screen-transition');
+
+            // Hide all screens
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active');
+                screen.classList.remove('screen-transition');
+            });
+
+            // Show the requested screen
+            document.getElementById(screenId).classList.add('active');
+            state.currentScreen = screenId;
+
+            // Special actions for specific screens
+            if (screenId === 'history-screen') {
+                renderHistoryList();
+            }
+
+            // Save state to localStorage
+            saveToLocalStorage();
+        }
+
+        // Puppy Emotion Functions
+        function setPuppyEmotion(emotion) {
+            // Remove all emotion classes
+            elements.puppy.classList.remove('puppy-happy', 'puppy-sad', 'puppy-listening', 'puppy-jumping');
+
+            // Set the new emotion
+            if (emotion !== 'normal') {
+                elements.puppy.classList.add(`puppy-${emotion}`);
+            }
+
+            state.puppyEmotion = emotion;
+        }
+
+        // Puppy Animations
+        function puppyListen() {
+            setPuppyEmotion('listening');
+            setTimeout(() => {
+                setPuppyEmotion('normal');
+            }, 3000);
+        }
+
+        function puppyHappy() {
+            setPuppyEmotion('happy');
+            setTimeout(() => {
+                setPuppyEmotion('normal');
+            }, 2500);
+        }
+
+        function puppyJump() {
+            setPuppyEmotion('jumping');
+            setTimeout(() => {
+                setPuppyEmotion('normal');
+            }, 600);
+        }
+
+        function puppySad() {
+            setPuppyEmotion('sad');
+            setTimeout(() => {
+                setPuppyEmotion('normal');
+            }, 3000);
+        }
+
+        function showSolution(advice) {
+            elements.solutionContainer.innerHTML = `<div class="solution-bubble">${advice}</div>`;
+
+            // Make the puppy happy when showing a solution
+            puppyHappy();
+
+            // Clear the solution after 5 seconds
+            setTimeout(() => {
+                elements.solutionContainer.innerHTML = '<div class="solution-bubble">快说:"谢谢小狗!!"</div>';
+            }, 5000);
+        }
+
+        // Render Functions
+        function renderHistoryList() {
+            elements.historyList.innerHTML = '';
+
+            state.worries.forEach(worry => {
+                console.log("[renderHistoryList]", worry);
+
+                // 创建 Date 对象
+                const date = new Date(worry.timestamp);
+                console.log("[date]", date);
+
+                // 使用 Intl.DateTimeFormat 格式化为 UTC 时间
+                const formatter = new Intl.DateTimeFormat('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZone: 'UTC' // 显式指定 UTC 时区
+                });
+                const formattedDate = formatter.format(date);
+
+                console.log("[formattedDate]", formattedDate); // 输出：2025/03/29 19:21:23
+
+                const listItem = document.createElement('li');
+                listItem.className = `history-item ${worry.resolved ? 'resolved' : 'unresolved'} fade-in`;
+
+                listItem.innerHTML = `
+          <div class="history-content">${worry.content}</div>
+          <div class="history-meta">
+            <span>${formattedDate}</span>
+            <span id="delete-worry" class="delete-worry" onclick="deleteWorry(${worry.worryId})">删除</span>
+            <span>${worry.resolved ? '已解决' : '未解决'}</span>
+          </div>
+          <div class="history-advice">${worry.advice || ''}</div>
+          ${!worry.resolved ? `<button class="resolve-btn" data-id="${worry.worryId}">解决</button>` : ''}
+        `;
+
+                elements.historyList.appendChild(listItem);
+            });
+
+            // Add event listeners to resolve buttons
+            document.querySelectorAll('.resolve-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const worryId = parseInt(e.target.getAttribute('data-id'));
+                    console.log('Resolve button clicked for worry ID:', worryId);
+                    resolveWorry(worryId);
+                });
+            });
+        }
+
+        function deleteWorry(worryId) {
+            // 找到要删除的烦恼项的索引
+            const index = state.worries.findIndex(worry => worry.worryId === worryId);
+            // 从数组中删除该烦恼项
+            state.worries.splice(index, 1);
+            // 保存状态到 localStorage
+            saveToLocalStorage();
+            $.ajax({
+                type: 'POST',
+                url: '/deleteWorry', // Replace with your actual API endpoint
+                data: { worryId }, // Send worryId in the request body
+                success: function (response) {
+                    console.log("Delete worry success:", response);
+                    // Remove the worry from the state
+                    // setTimeout(() => {
+                    // },1000);
+                    renderHistoryList();
+                }
+            });
+        }
+
+        // Action Functions
+        function fetchUserWorries(userId) {
+            // Mock API call
+            setTimeout(() => {
+                // Sample worries for demo
+                // state.worries = [
+                //     {
+                //         id: 1,
+                //         content: "我今天工作压力很大，感觉很累。",
+                //         timestamp: new Date().toISOString(),
+                //         resolved: false,
+                //         advice: "试着做些深呼吸，或者出去散散步，让自己放松一下。"
+                //     },
+                //     {
+                //         id: 2,
+                //         content: "我和朋友吵架了，不知道该怎么办。",
+                //         timestamp: new Date(Date.now() - 86400000).toISOString(),
+                //         resolved: true,
+                //         advice: "给彼此一些冷静的时间，然后坦诚地沟通你的感受。"
+                //     }
+                // ];
+
+                // 从后端获取
+                $.ajax({
+                    type: 'GET',
+                    url: '/getWorryList', // Replace with your actual API endpoint
+                    success: function (response) {
+                        console.log("[getWorryList]", response); // Handle success response
+                        state.worries = response;
+                        renderHistoryList();
+                    }
+                })
+            }, 500);
+        }
+
+        function addWorry(content) {
+            // Mock API call
+            setTimeout(() => {
+                const newWorry = {
+                    worryId: Date.now(),
+                    content,
+                    timestamp: new Date().toISOString(),
+                    resolved: false,
+                    advice: ''
+                };
+                elements.solutionContainer.innerHTML = `<div class="solution-bubble">小狗正在与你分享心情，请稍后~~~</div>`;
+                $.ajax({
+                    type: 'POST',
+                    url: '/addWorry', // Replace with your actual API endpoint
+                    data: { content },
+                    success: function (response) {
+                        console.log("[addWorry]", response); // Handle success response
+                        newWorry.worryId = response.worryId;
+                        newWorry.advice = response.advice;
+                        newWorry.content = response.content;
+                        newWorry.timestamp = response.timestamp;
+                        newWorry.resolved = response.resolved;
+                        state.worries.unshift(newWorry);
+                        showScreen('main-screen');
+                        puppyListen();
+                        // 添加建议
+                        $.ajax({
+                            type: 'GET',
+                            url: '/addAdvice', // 或者 '/getAdviceRandomly'
+                            data: { content },
+                            success: function (response) {
+                                console.log("Add advice success:", response);
+                                // // Show a random solution
+                                $.ajax({
+                                    type: 'GET',
+                                    url: '/getAdviceRandomly', // Replace with your actual API endpoint
+                                    data: { content },
+                                    success: function (response) {
+                                        console.log("[getAdviceRandomly]", response); // Handle success response
+                                        // Update the worry with advice
+                                        newWorry.advice = response.advice;
+                                        showScreen('main-screen');
+                                        puppyListen();
+                                        // 展示advice
+                                        showSolution(response.advice);
+                                    }
+                                });
+
+                                // 如果需要，可以在这里触发视图更新
+                                renderHistoryList();
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error fetching advice:", error);
+                            }
+                        });
+
+                    }
+                })
+                // state.worries.unshift(newWorry);
+                // showScreen('main-screen');
+                // puppyListen();
+
+                // // Show a random solution
+                // const randomSolution = solutions[Math.floor(Math.random() * solutions.length)];
+                // setTimeout(() => {
+                //     showSolution(randomSolution);
+                //     // Update the worry with advice
+                //     newWorry.advice = randomSolution;
+                // }, 2000);
+            }, 500);
+
+        }
+
+        function resolveWorry(worryId) {
+            // 使用 find 查找对应的烦恼项
+            var worry = state.worries.find(function (item) {
+                return item.worryId === worryId; // 根据 worryId 查找烦恼项
+            });
+
+            if (!worry) {
+                console.error("未找到对应的烦恼项");
+                return;
+            }
+
+            // 获取 content 和其他信息
+            var content = worry.content;
+
+            // 发送 AJAX 请求
+            $.ajax({
+                type: 'POST',
+                url: '/resolveWorry', // 替换为你的实际 API 地址
+                data: {
+                    content: content   // 发送对应的 content
+                },
+                success: function (response) {
+                    console.log("解决烦恼成功:", response);
+
+                    // 更新状态并重新渲染列表
+                    worry.resolved = true;
+                    renderHistoryList();
+                    puppyHappy(); // 假设这是一个让小狗开心的函数
+                    saveToLocalStorage(); // 假设这是一个保存到本地存储的函数                   
+                    $("#good-job").html("恭喜你打开了心结，小狗为你感到骄傲！");
+                    // 5秒后清空消息
+                    setTimeout(() => {
+                        $("#good-job").html("");
+                    }, 3000);
+                },
+                error: function (xhr, status, error) {
+                    console.error("解决烦恼失败:", error);
+                    alert("解决烦恼失败，请稍后再试！");
+                }
+            });
+        }
+
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark', state.darkMode);
+            elements.darkModeToggle.textContent = state.darkMode ? '☀️' : '🌙';
+            saveToLocalStorage();
+        }
+
+        function login(realName, username, password) {
+            // Clear previous errors
+            elements.loginError.style.display = 'none';
+            // Simple validation
+            if (!username || !password) {
+                elements.loginError.textContent = '请输入用户名和密码';
+                elements.loginError.style.display = 'block';
+                return;
+            }
+
+            // Mock login API call
+            setTimeout(() => {
+                $.ajax({
+                    type: 'POST',
+                    url: '/login', // Replace with your actual API endpoint
+                    data: { realName,username, password },
+                    success: function (response) {
+                        console.log(response);
+                        // Update settings form using jQuery
+                        $('#username').val(response.username);
+                        $('#email-settings').val(response.email);
+
+                        // Save user information to localStorage
+                        localStorage.setItem('worryReliefUser', JSON.stringify({
+                            id: response.user_id,
+                            username: response.username,
+                            email: response.email
+                        }));
+
+
+                        saveToLocalStorage();
+                        showScreen('main-screen');
+                        fetchUserWorries(response.user_id);
+                        puppyHappy();
+                    }
+                })
+            }, 500);
+        }
+
+        function register(username, email, password, confirmPassword,registerFullName) {
+            // Clear previous errors
+            elements.registerError.style.display = 'none';
+
+            // Simple validation
+            if (!username || !email || !password) {
+                elements.registerError.textContent = '请填写所有必填字段';
+                elements.registerError.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                elements.registerError.textContent = '两次输入的密码不一致';
+                elements.registerError.style.display = 'block';
+                return;
+            }
+
+            // Mock register API call
+            setTimeout(() => {
+                // For demo purposes, any registration works
+                $.ajax({
+                    type: 'POST',
+                    url: '/register', // Replace with your actual API endpoint
+                    data: { username, email, password },
+                    success: function (response) {
+                        // Pre-fill the email field on the login page
+                        document.getElementById('email').value = email;
+                        $("#full-name").val(registerFullName);
+
+                        // Redirect to login page
+                        showScreen('login-screen');
+                    },
+                })
+
+
+            }, 500);
+        }
+
+        function logout() {
+            clearLocalStorage();
+            showScreen('login-screen');
+
+            // Clear form fields
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-confirm-password').value = '';
+        }
+
+        // Event Listeners
+        elements.loginBtn.addEventListener('click', () => {
+            const fullname = document.getElementById('full-name').value;
+            console.log("[fullname]",fullname);
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            login(fullname,email, password);
+        });
+
+        elements.registerBtn.addEventListener('click', () => {
+            const registerFullName = document.getElementById('register-fullname').value;
+            $("#full-name").val(registerFullName);
+            console.log("[registerFullName]",registerFullName);
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            register(username, email, password, confirmPassword,registerFullName);
+        });
+
+        var globalRegisterFullName = document.getElementById('register-fullname').value;
+        console.log("[globalRegisterFullName]",globalRegisterFullName);
+
+        elements.goToRegister.addEventListener('click', () => {
+            showScreen('register-screen');
+        });
+
+        elements.goToLogin.addEventListener('click', () => {
+            showScreen('login-screen');
+        });
+
+        elements.ventBtn.addEventListener('click', () => {
+            showScreen('venting-screen');
+        });
+
+        elements.resolveBtn.addEventListener('click', () => {
+            showScreen('history-screen');
+        });
+
+        elements.submitVentBtn.addEventListener('click', () => {
+            const content = elements.ventingTextarea.value.trim();
+            if (content) {
+                addWorry(content);
+                elements.ventingTextarea.value = '';
+            }
+        });
+
+        elements.saveSettingsBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (!newPassword) {
+                alert('请输入新密码');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            // Mock password update
+            setTimeout(() => {
+                $.ajax({
+                    type: 'POST',
+                    url: '/changePassword', // Replace with your actual API endpoint
+                    success: function (response) {
+                        console.log(response);
+                        alert('信息修改成功！');
+                        $("#new-password").val("");
+                        $("#confirm-password").val("");
+                        showScreen('main-screen');
+                        puppyHappy();
+                    }
+                })
+            }, 300);
+        });
+
+        elements.logoutBtn.addEventListener('click', () => {
+            if (confirm('确定要退出登录吗？')) {
+                logout();
+                puppySad();
+            }
+        });
+
+        // Navigation buttons
+        elements.homeBtn.addEventListener('click', () => {
+            showScreen('main-screen');
+        });
+
+        elements.historyBtn.addEventListener('click', () => {
+            showScreen('history-screen');
+        });
+
+        elements.settingsBtn.addEventListener('click', () => {
+            $.ajax({
+                type: 'POST',
+                url: '/getUser', // Replace with your actual API endpoint
+                success: function (response) {
+                    console.log("[getUser]", response);
+                    // Update settings form using jQuery
+                    $('#username-change').val(response.username);
+                    $('#email-change').val(response.email);
+                },
+            });
+            showScreen('settings-screen');
+        });
+
+        // Dark mode toggle
+        elements.darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // Back buttons
+        document.querySelectorAll('.back-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showScreen('main-screen');
+            });
+        });
+
+        // Puppy interaction - make it jump when clicked
+        document.querySelector('.puppy-container').addEventListener('click', () => {
+            puppyJump();
+            setTimeout(() => {
+                puppyHappy();
+            }, 600);
+        });
+
+        // Emotion buttons
+        elements.happyBtn.addEventListener('click', puppyHappy);
+        elements.sadBtn.addEventListener('click', puppySad);
+        elements.listeningBtn.addEventListener('click', puppyListen);
+        elements.jumpingBtn.addEventListener('click', puppyJump);
+
+        // Add this JavaScript to handle clicking on example bubbles
+        // Add this after the emotion buttons event listeners
+
+        // Example bubble click handlers
+        document.querySelectorAll('.example-bubble').forEach(bubble => {
+            bubble.addEventListener('click', () => {
+                // Get the text from the bubble
+                const text = bubble.textContent;
+
+                // Navigate to venting screen
+                showScreen('venting-screen');
+
+                // Pre-fill the textarea with the example text
+                elements.ventingTextarea.value = text;
+
+                // Focus the textarea and place cursor at the end
+                elements.ventingTextarea.focus();
+                elements.ventingTextarea.setSelectionRange(
+                    elements.ventingTextarea.value.length,
+                    elements.ventingTextarea.value.length
+                );
+            });
+        });
+
+        // Solutions for worries
+        const solutions = [
+            "我们一起去散步吧！呼吸新鲜空气总是有帮助的！",
+            "要不要和朋友分享你的烦恼？",
+            "也许小睡一会儿会有帮助？我睡一觉后总是感觉好多了！",
+            "汪汪！试着深呼吸。从鼻子吸气，从嘴巴呼气！",
+            "有时候把想法写下来可以帮助整理思绪！",
+            "你有没有尝试做一些你喜欢的事情来转移注意力？",
+            "记住，在需要的时候寻求帮助是完全可以的！",
+            "要不要来点零食？零食总能让我心情变好！"
+        ];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved state from localStorage
+            loadFromLocalStorage();
+
+            // Make the puppy do a little animation on page load
+            setTimeout(() => {
+                if (state.currentScreen === 'main-screen') {
+                    puppyHappy();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
+
