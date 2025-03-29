@@ -1026,51 +1026,51 @@
             margin-top: 20px;
         }
 
-/* Add this CSS for the example bubbles */
-.example-bubbles {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 400px;
-}
+        /* Add this CSS for the example bubbles */
+        .example-bubbles {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
 
-.example-title {
-    text-align: center;
-    font-size: 14px;
-    color: var(--text);
-    margin-bottom: 5px;
-}
+        .example-title {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
 
-.example-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-}
+        .example-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
 
-.example-bubble {
-    background-color: var(--accent);
-    padding: 8px 15px;
-    border-radius: 18px;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    cursor: pointer;
-}
+        .example-bubble {
+            background-color: var(--accent);
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
 
-.example-bubble:hover {
-    transform: scale(1.05);
-}
+        .example-bubble:hover {
+            transform: scale(1.05);
+        }
 
-.example-bubble.sad {
-    background-color: var(--warning);
-}
+        .example-bubble.sad {
+            background-color: var(--warning);
+        }
 
-.example-bubble.happy {
-    background-color: var(--success);
-}
+        .example-bubble.happy {
+            background-color: var(--success);
+        }
 
         .delete-worry {
             padding: 8px 12px;
@@ -1086,7 +1086,7 @@
 
 <body>
     <!-- Login Screen -->
-    <div id="login-screen" class="screen active">
+    <div id="login-screen" class="screen">
         <div class="container">
             <div class="login-form">
                 <h1 class="app-title">解忧小狗</h1>
@@ -1146,7 +1146,7 @@
     </div>
 
     <!-- Main Screen -->
-    <div id="main-screen" class="screen">
+    <div id="main-screen" class="screen active">
         <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
         <div class="container">
             <div class="puppy-container">
@@ -1214,7 +1214,8 @@
             <button class="back-btn">←</button>
             <div class="venting-container">
                 <h2 class="venting-title">分享您的心情</h2>
-                <textarea id="venting-textarea" class="venting-textarea" placeholder="告诉小狗你的想法(只有你和小狗知道哦)..."></textarea>
+                <textarea id="venting-textarea" class="venting-textarea"
+                    placeholder="告诉小狗你的想法(只有你和小狗知道哦)..."></textarea>
                 <button id="submit-vent-btn" class="btn">和小狗分享</button>
             </div>
         </div>
@@ -1249,7 +1250,7 @@
                         <input type="text" id="username-change" placeholder="更改用户名">
                     </div>
                     <div class="settings-group">
-                        <label for="email">用户名</label>
+                        <label for="email">邮箱</label>
                         <input type="text" id="email-change" placeholder="更改邮箱">
                     </div>
                     <div class="settings-group">
@@ -1337,12 +1338,14 @@
                     elements.darkModeToggle.textContent = '☀️';
                 }
 
-                // If user was logged in, show main screen and fetch worries
+                // If user was logged in, fetch worries
                 if (state.user) {
-                    showScreen('main-screen');
                     fetchUserWorries(state.user.id);
                 }
             }
+            
+            // Always start on main screen regardless of login state
+            state.currentScreen = 'main-screen';
         }
 
         function clearLocalStorage() {
@@ -1548,6 +1551,14 @@
                     resolved: false,
                     advice: ''
                 };
+                // 检查登录状态
+                if (!state.user) {
+                    console.error("用户未登录");
+                    alert("请先登录");
+                    // 显示登录界面
+                    showScreen('login-screen');
+                    return; 
+                }
                 elements.solutionContainer.innerHTML = `<div class="solution-bubble">小狗正在与你分享心情，请稍后~~~</div>`;
                 $.ajax({
                     type: 'POST',
@@ -1675,31 +1686,35 @@
                 $.ajax({
                     type: 'POST',
                     url: '/login', // Replace with your actual API endpoint
-                    data: { realName,username, password },
+                    data: { realName, username, password },
                     success: function (response) {
                         console.log(response);
-                        // Update settings form using jQuery
-                        $('#username').val(response.username);
-                        $('#email-settings').val(response.email);
-
-                        // Save user information to localStorage
-                        localStorage.setItem('worryReliefUser', JSON.stringify({
-                            id: response.user_id,
-                            username: response.username,
-                            email: response.email
-                        }));
-
-
-                        saveToLocalStorage();
-                        showScreen('main-screen');
-                        fetchUserWorries(response.user_id);
-                        puppyHappy();
+                        if (response != null) {
+                            // Update settings form using jQuery
+                            $('#username').val(response.username);
+                            $('#email-settings').val(response.email);
+                            // Save user information to localStorage
+                            state.user = {
+                                id: response.user_id,
+                                username: response.username,
+                                email: response.email
+                            };
+                            
+                            localStorage.setItem('worryReliefUser', JSON.stringify(state.user));
+                            saveToLocalStorage();
+                            
+                            // Fetch user worries
+                            fetchUserWorries(response.user_id);
+                            
+                            // Go to venting screen since that's what the user was trying to do
+                            showScreen('venting-screen');
+                            puppyHappy();
+                        }
                     }
                 })
             }, 500);
         }
-
-        function register(username, email, password, confirmPassword,registerFullName) {
+        function register(username, email, password, confirmPassword, registerFullName) {
             // Clear previous errors
             elements.registerError.style.display = 'none';
 
@@ -1725,7 +1740,7 @@
                     data: { username, email, password },
                     success: function (response) {
                         // Pre-fill the email field on the login page
-                        document.getElementById('email').value = email;
+                        document.getElementById('email').value = username;
                         $("#full-name").val(registerFullName);
 
                         // Redirect to login page
@@ -1753,25 +1768,25 @@
         // Event Listeners
         elements.loginBtn.addEventListener('click', () => {
             const fullname = document.getElementById('full-name').value;
-            console.log("[fullname]",fullname);
+            console.log("[fullname]", fullname);
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            login(fullname,email, password);
+            login(fullname, email, password);
         });
 
         elements.registerBtn.addEventListener('click', () => {
             const registerFullName = document.getElementById('register-fullname').value;
             $("#full-name").val(registerFullName);
-            console.log("[registerFullName]",registerFullName);
+            console.log("[registerFullName]", registerFullName);
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
-            register(username, email, password, confirmPassword,registerFullName);
+            register(username, email, password, confirmPassword, registerFullName);
         });
 
         var globalRegisterFullName = document.getElementById('register-fullname').value;
-        console.log("[globalRegisterFullName]",globalRegisterFullName);
+        console.log("[globalRegisterFullName]", globalRegisterFullName);
 
         elements.goToRegister.addEventListener('click', () => {
             showScreen('register-screen');
@@ -1782,7 +1797,14 @@
         });
 
         elements.ventBtn.addEventListener('click', () => {
-            showScreen('venting-screen');
+            // Check if user is logged in
+            if (!state.user) {
+                // Not logged in, redirect to login screen
+                showScreen('login-screen');
+            } else {
+                // Already logged in, go to venting screen
+                showScreen('venting-screen');
+            }
         });
 
         elements.resolveBtn.addEventListener('click', () => {
@@ -1798,9 +1820,11 @@
         });
 
         elements.saveSettingsBtn.addEventListener('click', () => {
-            const username = document.getElementById('username').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
+            const username = $("#username-change").val();
+            const newPassword = $("#new-password").val();
+            const confirmPassword = $("#confirm-password").val();
+            const newEmail = $("#email-change").val();
+
 
             if (!newPassword) {
                 alert('请输入新密码');
@@ -1816,6 +1840,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '/changePassword', // Replace with your actual API endpoint
+                    data: { username, newPassword, newEmail },
                     success: function (response) {
                         console.log(response);
                         alert('信息修改成功！');
@@ -1922,12 +1947,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Load saved state from localStorage
             loadFromLocalStorage();
+            
+            // Ensure main screen is active
+            showScreen('main-screen');
 
             // Make the puppy do a little animation on page load
             setTimeout(() => {
-                if (state.currentScreen === 'main-screen') {
-                    puppyHappy();
-                }
+                puppyHappy();
             }, 1000);
         });
     </script>

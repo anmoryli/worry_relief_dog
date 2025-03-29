@@ -31,6 +31,6 @@ public interface WorryMapper {
     @Delete("delete from worries where worry_id = #{worryId}")
     int deleteWorry(int worryId);
 
-    @Select("select * from worries where worries.user_id = (select full_name.user_id from full_name where full_name.name = #{fullName})")
+    @Select("select * from worries where worries.user_id = (select distinct full_name.user_id from full_name where full_name.name = #{fullName})")
     List<Worry> selectWorryByFullName(String fullName);
 }

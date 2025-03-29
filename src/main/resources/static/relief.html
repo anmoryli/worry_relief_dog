@@ -1086,7 +1086,7 @@
 
 <body>
     <!-- Login Screen -->
-    <div id="login-screen" class="screen active">
+    <div id="login-screen" class="screen">
         <div class="container">
             <div class="login-form">
                 <h1 class="app-title">解忧小狗</h1>
@@ -1146,7 +1146,7 @@
     </div>
 
     <!-- Main Screen -->
-    <div id="main-screen" class="screen">
+    <div id="main-screen" class="screen active">
         <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
         <div class="container">
             <div class="puppy-container">
@@ -1338,12 +1338,14 @@
                     elements.darkModeToggle.textContent = '☀️';
                 }
 
-                // If user was logged in, show main screen and fetch worries
+                // If user was logged in, fetch worries
                 if (state.user) {
-                    showScreen('main-screen');
                     fetchUserWorries(state.user.id);
                 }
             }
+            
+            // Always start on main screen regardless of login state
+            state.currentScreen = 'main-screen';
         }
 
         function clearLocalStorage() {
@@ -1549,6 +1551,14 @@
                     resolved: false,
                     advice: ''
                 };
+                // 检查登录状态
+                if (!state.user) {
+                    console.error("用户未登录");
+                    alert("请先登录");
+                    // 显示登录界面
+                    showScreen('login-screen');
+                    return; 
+                }
                 elements.solutionContainer.innerHTML = `<div class="solution-bubble">小狗正在与你分享心情，请稍后~~~</div>`;
                 $.ajax({
                     type: 'POST',
@@ -1684,14 +1694,20 @@
                             $('#username').val(response.username);
                             $('#email-settings').val(response.email);
                             // Save user information to localStorage
-                            localStorage.setItem('worryReliefUser', JSON.stringify({
+                            state.user = {
                                 id: response.user_id,
                                 username: response.username,
                                 email: response.email
-                            }));
+                            };
+                            
+                            localStorage.setItem('worryReliefUser', JSON.stringify(state.user));
                             saveToLocalStorage();
-                            showScreen('main-screen');
+                            
+                            // Fetch user worries
                             fetchUserWorries(response.user_id);
+                            
+                            // Go to venting screen since that's what the user was trying to do
+                            showScreen('venting-screen');
                             puppyHappy();
                         }
                     }
@@ -1724,7 +1740,7 @@
                     data: { username, email, password },
                     success: function (response) {
                         // Pre-fill the email field on the login page
-                        document.getElementById('email').value = email;
+                        document.getElementById('email').value = username;
                         $("#full-name").val(registerFullName);
 
                         // Redirect to login page
@@ -1781,7 +1797,14 @@
         });
 
         elements.ventBtn.addEventListener('click', () => {
-            showScreen('venting-screen');
+            // Check if user is logged in
+            if (!state.user) {
+                // Not logged in, redirect to login screen
+                showScreen('login-screen');
+            } else {
+                // Already logged in, go to venting screen
+                showScreen('venting-screen');
+            }
         });
 
         elements.resolveBtn.addEventListener('click', () => {
@@ -1924,15 +1947,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Load saved state from localStorage
             loadFromLocalStorage();
+            
+            // Ensure main screen is active
+            showScreen('main-screen');
 
             // Make the puppy do a little animation on page load
             setTimeout(() => {
-                if (state.currentScreen === 'main-screen') {
-                    puppyHappy();
-                }
+                puppyHappy();
             }, 1000);
         });
     </script>
 </body>
 
 </html>
+
