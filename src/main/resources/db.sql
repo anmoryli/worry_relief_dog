@@ -72,3 +72,13 @@ create TABLE full_name (
     `name` varchar(255),
     foreign key (`user_id`) references users(`user_id`)
 );
+
+create table history (
+    `id` int auto_increment primary key,
+    `user_id` int,
+    `full_name` varchar(255),
+    `content` text,
+    `advice` text,
+    `timestamp` datetime default now(),
+    foreign key (`user_id`) references users(`user_id`)
+);

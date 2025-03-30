@@ -3,9 +3,7 @@ package com.anmory.worryreliefdog.controller;
 import com.anmory.worryreliefdog.model.Advice;
 import com.anmory.worryreliefdog.model.User;
 import com.anmory.worryreliefdog.model.Worry;
-import com.anmory.worryreliefdog.service.AdviceService;
-import com.anmory.worryreliefdog.service.GetAdviceFromLLMService;
-import com.anmory.worryreliefdog.service.WorryService;
+import com.anmory.worryreliefdog.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +29,11 @@ public class AdviceController {
 
     @Autowired
     GetAdviceFromLLMService getAdviceFromLLMService;
+
+    @Autowired
+    HistoryService historyService;
+    @Autowired
+    private FullNameService fullNameService;
 
     public String getAdvice(String content) throws IOException {
         return getAdviceFromLLMService.chat(content);
@@ -62,6 +65,8 @@ public class AdviceController {
         log.info("worryId:" + worryId);
         Advice advice = adviceService.getAdviceRandomly(worryId);
         log.info("advice:" + advice);
+        String fullName = fullNameService.getFullName(user.getUserId());
+        historyService.addHistory(user.getUserId(), fullName, worry.getContent(), advice.getAdvice());
         return  advice;
     }
 }

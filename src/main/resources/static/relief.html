@@ -42,6 +42,14 @@
             --puppy-tag: #C0C0C0;
             /* silver */
 
+            /* Add this inside the :root CSS variables section after the existing puppy color variables */
+            --puppy-skin-golden: #E6D2B5;
+            --puppy-skin-brown: #A68267;
+            --puppy-skin-white: #F5F5F5;
+            --puppy-skin-black: #333333;
+            --puppy-skin-gray: #A9A9A9;
+            --puppy-skin-spotted: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.2'%3E%3Ccircle cx='25' cy='25' r='8'/%3E%3Ccircle cx='75' cy='75' r='8'/%3E%3Ccircle cx='75' cy='25' r='8'/%3E%3Ccircle cx='25' cy='75' r='8'/%3E%3C/g%3E%3C/svg%3E");
+
             /* Dark mode variables */
             --dark-primary: #FF7F50;
             /* darker coral */
@@ -1081,6 +1089,331 @@
             font-size: 14px;
             cursor: pointer;
         }
+
+        /* Add CSS for the puppy customization section */
+        .settings-subtitle {
+            text-align: center;
+            margin: 15px 0 10px;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .puppy-skins,
+        .puppy-breeds {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .skin-option,
+        .breed-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .skin-option:hover,
+        .breed-option:hover {
+            transform: scale(1.05);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .skin-option.selected,
+        .breed-option.selected {
+            background-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .skin-preview,
+        .breed-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            border: 2px solid var(--secondary);
+        }
+
+        .skin-preview.golden {
+            background-color: var(--puppy-skin-golden);
+        }
+
+        .skin-preview.brown {
+            background-color: var(--puppy-skin-brown);
+        }
+
+        .skin-preview.white {
+            background-color: var(--puppy-skin-white);
+        }
+
+        .skin-preview.black {
+            background-color: var(--puppy-skin-black);
+        }
+
+        .skin-preview.gray {
+            background-color: var(--puppy-skin-gray);
+        }
+
+        .skin-preview.spotted {
+            background-color: var(--puppy-skin-white);
+            background-image: var(--puppy-skin-spotted);
+        }
+
+        .breed-preview {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .breed-preview.default {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23E6D2B5'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.poodle {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23E6D2B5'/%3E%3Cpath d='M30 30 Q50 10 70 30' stroke='%23E6D2B5' stroke-width='10' fill='none'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.husky {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23A9A9A9'/%3E%3Cpath d='M30 20 L70 20 L70 50 L50 70 L30 50 Z' fill='%23F5F5F5'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.corgi {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='40' ry='30' fill='%23E6D2B5'/%3E%3Cpath d='M30 30 L40 20 L60 20 L70 30' stroke='%23E6D2B5' stroke-width='5' fill='none'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        }
+
+        /* Breed-specific styles */
+        .puppy-poodle .puppy-ear-left,
+        .puppy-poodle .puppy-ear-right {
+            border-radius: 50%;
+            height: 40px;
+        }
+
+        .puppy-husky .puppy-ear-left,
+        .puppy-husky .puppy-ear-right {
+            height: 50px;
+            width: 30px;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .puppy-corgi .puppy-ear-left,
+        .puppy-corgi .puppy-ear-right {
+            width: 35px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        .puppy-corgi .puppy-body {
+            height: 80px;
+            width: 160px;
+        }
+
+        /* Add these more distinctive breed-specific styles after the existing puppy-corgi styles */
+
+        /* More distinctive breed styles */
+        /* Default breed - Golden Retriever style */
+        .puppy-default .puppy-body {
+            width: 140px;
+            height: 120px;
+            border-radius: 70px 70px 60px 60px;
+        }
+
+        .puppy-default .puppy-head {
+            width: 140px;
+            height: 130px;
+            border-radius: 70px;
+        }
+
+        .puppy-default .puppy-ear-left,
+        .puppy-default .puppy-ear-right {
+            width: 45px;
+            height: 60px;
+            border-radius: 20px;
+            top: 0;
+        }
+
+        .puppy-default .puppy-tail {
+            width: 30px;
+            height: 40px;
+            border-radius: 15px;
+            transform: rotate(30deg);
+        }
+
+        /* Poodle - Curly hair and distinctive poodle shape */
+        .puppy-poodle .puppy-head {
+            border-radius: 65px;
+            height: 140px;
+        }
+
+        .puppy-poodle .puppy-body {
+            height: 110px;
+            border-radius: 60px 60px 50px 50px;
+        }
+
+        .puppy-poodle .puppy-ear-left,
+        .puppy-poodle .puppy-ear-right {
+            width: 35px;
+            height: 70px;
+            border-radius: 50% 50% 20% 20%;
+            top: -10px;
+        }
+
+        .puppy-poodle .puppy-ear-left {
+            left: 25px;
+        }
+
+        .puppy-poodle .puppy-ear-right {
+            right: 25px;
+        }
+
+        .puppy-poodle .puppy-tail {
+            width: 20px;
+            height: 50px;
+            border-radius: 10px;
+            right: 25px;
+            bottom: 60px;
+        }
+
+        .puppy-poodle::before {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-color: inherit;
+            border-radius: 50%;
+            top: 0;
+            left: 85px;
+            z-index: 6;
+        }
+
+        /* Husky - Pointed ears, wolf-like appearance */
+        .puppy-husky .puppy-head {
+            border-radius: 60px;
+        }
+
+        .puppy-husky .puppy-ear-left,
+        .puppy-husky .puppy-ear-right {
+            width: 30px;
+            height: 60px;
+            border-radius: 30% 30% 0 0;
+            transform: rotate(0deg);
+            top: -15px;
+        }
+
+        .puppy-husky .puppy-ear-left {
+            left: 40px;
+        }
+
+        .puppy-husky .puppy-ear-right {
+            right: 40px;
+        }
+
+        .puppy-husky .puppy-body {
+            height: 130px;
+            width: 150px;
+            border-radius: 75px 75px 65px 65px;
+        }
+
+        .puppy-husky .puppy-tail {
+            width: 25px;
+            height: 60px;
+            border-radius: 12px;
+            transform: rotate(45deg);
+            right: 20px;
+            bottom: 75px;
+        }
+
+        .puppy-husky .puppy-eye-left,
+        .puppy-husky .puppy-eye-right {
+            background-color: #3498db;
+            /* Blue eyes for husky */
+        }
+
+        .puppy-husky .puppy-patch {
+            width: 140px;
+            height: 65px;
+            border-radius: 70px 70px 0 0;
+            top: 0;
+            left: 0;
+            background-color: white !important;
+        }
+
+        /* Corgi - Short legs, long body */
+        .puppy-corgi .puppy-head {
+            width: 130px;
+            height: 120px;
+            border-radius: 65px;
+        }
+
+        .puppy-corgi .puppy-body {
+            width: 180px;
+            height: 80px;
+            left: 20px;
+            bottom: 40px;
+            border-radius: 90px 90px 50px 50px;
+        }
+
+        .puppy-corgi .puppy-ear-left,
+        .puppy-corgi .puppy-ear-right {
+            width: 40px;
+            height: 45px;
+            border-radius: 20px 20px 5px 5px;
+            top: -10px;
+        }
+
+        .puppy-corgi .puppy-ear-left {
+            left: 30px;
+            transform: rotate(-5deg);
+        }
+
+        .puppy-corgi .puppy-ear-right {
+            right: 30px;
+            transform: rotate(5deg);
+        }
+
+        .puppy-corgi .puppy-leg-front,
+        .puppy-corgi .puppy-leg-back {
+            height: 20px;
+            width: 25px;
+        }
+
+        .puppy-corgi .puppy-leg-front {
+            left: 50px;
+            bottom: 20px;
+        }
+
+        .puppy-corgi .puppy-leg-back {
+            right: 50px;
+            bottom: 20px;
+        }
+
+        .puppy-corgi .puppy-tail {
+            width: 25px;
+            height: 25px;
+            border-radius: 12px;
+            right: 10px;
+            bottom: 60px;
+        }
+
+        /* Update the breed preview icons to be more distinctive */
+        .breed-preview.default {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='40' ry='35' fill='%23E6D2B5'/%3E%3Cpath d='M30 30 Q50 40 70 30' stroke='%23E6D2B5' stroke-width='10' fill='none'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3Cpath d='M20 30 L30 10 L40 30' fill='%23A68267'/%3E%3Cpath d='M60 30 L70 10 L80 30' fill='%23A68267'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.poodle {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='35' fill='%23E6D2B5'/%3E%3Ccircle cx='50' cy='25' r='20' fill='%23E6D2B5'/%3E%3Ccircle cx='35' cy='45' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='45' r='5' fill='%23000'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3Cpath d='M25 25 Q35 5 50 15 Q65 5 75 25' stroke='%23A68267' stroke-width='10' fill='none'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.husky {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='55' rx='40' ry='35' fill='%23A9A9A9'/%3E%3Cpath d='M20 40 L50 80 L80 40 L65 20 L35 20 Z' fill='%23F5F5F5'/%3E%3Ccircle cx='35' cy='45' r='5' fill='%233498db'/%3E%3Ccircle cx='65' cy='45' r='5' fill='%233498db'/%3E%3Cpath d='M40 60 Q50 70 60 60' stroke='%23000' stroke-width='2' fill='none'/%3E%3Cpath d='M25 25 L35 5 L45 25' fill='%23A9A9A9'/%3E%3Cpath d='M55 25 L65 5 L75 25' fill='%23A9A9A9'/%3E%3C/svg%3E");
+        }
+
+        .breed-preview.corgi {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='60' rx='45' ry='25' fill='%23E6D2B5'/%3E%3Ccircle cx='30' cy='40' r='20' fill='%23E6D2B5'/%3E%3Ccircle cx='25' cy='35' r='5' fill='%23000'/%3E%3Ccircle cx='35' cy='35' r='5' fill='%23000'/%3E%3Cpath d='M25 45 Q30 50 35 45' stroke='%23000' stroke-width='2' fill='none'/%3E%3Cpath d='M15 25 L25 15 L35 25' fill='%23A68267'/%3E%3Cpath d='M25 25 L35 15 L45 25' fill='%23A68267'/%3E%3Cpath d='M50 70 L55 80 L60 70' fill='%23A68267'/%3E%3Crect x='40' y='80' width='10' height='10' fill='%23E6D2B5'/%3E%3Crect x='70' y='80' width='10' height='10' fill='%23E6D2B5'/%3E%3C/svg%3E");
+        }
     </style>
 </head>
 
@@ -1229,6 +1562,7 @@
                 <h2 class="history-title">您的心情记录</h2>
                 <div class="history-message">
                     <p>记录你的悲与喜吧~~</p>
+                    <p>一个记录在解决之前，是不能添加另一个同名记录的哦~~</p>
                 </div>
                 <div id="good-job" class="history-message"></div>
                 <ul id="history-list" class="history-list">
@@ -1243,7 +1577,56 @@
         <div class="container">
             <button class="back-btn">←</button>
             <div class="settings-container">
-                <h2 class="settings-title">设置</h2>
+                <!-- Add this inside the settings-container div, before the settings-form div -->
+                <div class="puppy-customization">
+                    <h3 class="settings-subtitle">自定义小狗</h3>
+                    <div class="puppy-skins">
+                        <div class="skin-option" data-skin="golden" data-breed="default">
+                            <div class="skin-preview golden"></div>
+                            <span>金毛</span>
+                        </div>
+                        <div class="skin-option" data-skin="brown" data-breed="default">
+                            <div class="skin-preview brown"></div>
+                            <span>棕色</span>
+                        </div>
+                        <div class="skin-option" data-skin="white" data-breed="default">
+                            <div class="skin-preview white"></div>
+                            <span>白色</span>
+                        </div>
+                        <div class="skin-option" data-skin="black" data-breed="default">
+                            <div class="skin-preview black"></div>
+                            <span>黑色</span>
+                        </div>
+                        <div class="skin-option" data-skin="gray" data-breed="default">
+                            <div class="skin-preview gray"></div>
+                            <span>灰色</span>
+                        </div>
+                        <div class="skin-option" data-skin="spotted" data-breed="default">
+                            <div class="skin-preview spotted"></div>
+                            <span>斑点</span>
+                        </div>
+                    </div>
+
+                    <h3 class="settings-subtitle">小狗品种</h3>
+                    <div class="puppy-breeds">
+                        <div class="breed-option" data-breed="default" data-skin="golden">
+                            <div class="breed-preview default"></div>
+                            <span>默认</span>
+                        </div>
+                        <div class="breed-option" data-breed="poodle" data-skin="golden">
+                            <div class="breed-preview poodle"></div>
+                            <span>贵宾犬</span>
+                        </div>
+                        <div class="breed-option" data-breed="husky" data-skin="gray">
+                            <div class="breed-preview husky"></div>
+                            <span>哈士奇</span>
+                        </div>
+                        <div class="breed-option" data-breed="corgi" data-skin="golden">
+                            <div class="breed-preview corgi"></div>
+                            <span>柯基</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="settings-form">
                     <div class="settings-group">
                         <label for="username">用户名</label>
@@ -1275,7 +1658,11 @@
             user: null,
             worries: [],
             darkMode: false,
-            puppyEmotion: 'normal' // Default emotion
+            puppyEmotion: 'normal', // Default emotion
+            /* Add this to the state object in the JavaScript section */
+            puppySkin: 'golden',
+            puppyBreed: 'default',
+            macAddress: null
         };
 
         // DOM Elements
@@ -1319,31 +1706,86 @@
 
         // Local Storage Functions
         function saveToLocalStorage() {
+            /* Replace the saveToLocalStorage function with this */
             localStorage.setItem('worryReliefState', JSON.stringify({
                 user: state.user,
-                darkMode: state.darkMode
+                darkMode: state.darkMode,
+                puppySkin: state.puppySkin,
+                puppyBreed: state.puppyBreed,
+                macAddress: state.macAddress
             }));
         }
 
-        function loadFromLocalStorage() {
+        /* Add this function after the loadFromLocalStorage function */
+        function getMacAddress() {
+            return new Promise((resolve) => {
+                // In a real implementation, this would be a server-side call to get the MAC address
+                // For this demo, we'll generate a pseudo-unique identifier based on browser and device info
+                const nav = window.navigator;
+                const screen = window.screen;
+                const guid = [
+                    nav.userAgent,
+                    screen.height || '',
+                    screen.width || '',
+                    screen.colorDepth || '',
+                    new Date().getTimezoneOffset(),
+                    nav.platform || '',
+                    nav.language || '',
+                    nav.hardwareConcurrency || ''
+                ].join('');
+
+                // Create a hash from the guid
+                let hash = 0;
+                for (let i = 0; i < guid.length; i++) {
+                    const char = guid.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32bit integer
+                }
+
+                // Format as a MAC-like address
+                const macLike = Math.abs(hash).toString(16).padStart(12, '0');
+                const formattedMac = macLike.match(/.{1,2}/g).join(':');
+
+                resolve(formattedMac);
+            });
+        }
+
+        /* Replace the loadFromLocalStorage function with this */
+        async function loadFromLocalStorage() {
+            // Get the device's MAC-like identifier
+            const currentMac = await getMacAddress();
+            state.macAddress = currentMac;
+
             const savedState = localStorage.getItem('worryReliefState');
             if (savedState) {
                 const parsedState = JSON.parse(savedState);
-                state.user = parsedState.user;
-                state.darkMode = parsedState.darkMode;
 
                 // Apply dark mode if it was enabled
+                state.darkMode = parsedState.darkMode;
                 if (state.darkMode) {
                     document.body.classList.add('dark');
                     elements.darkModeToggle.textContent = '☀️';
                 }
 
-                // If user was logged in, fetch worries
-                if (state.user) {
+                // Apply puppy customization
+                state.puppySkin = parsedState.puppySkin || 'golden';
+                state.puppyBreed = parsedState.puppyBreed || 'default';
+                updatePuppyAppearance();
+
+                // Check if there's a saved MAC address and it matches the current one
+                const savedMac = parsedState.macAddress;
+
+                // If user was logged in and MAC address matches (or no saved MAC)
+                if (parsedState.user && (!savedMac || savedMac === currentMac)) {
+                    state.user = parsedState.user;
                     fetchUserWorries(state.user.id);
+                } else if (parsedState.user && savedMac && savedMac !== currentMac) {
+                    // MAC address doesn't match - we'll still restore the user but require re-login
+                    console.log("MAC address changed, requiring re-authentication");
+                    // We could show a message here if desired
                 }
             }
-            
+
             // Always start on main screen regardless of login state
             state.currentScreen = 'main-screen';
         }
@@ -1389,6 +1831,57 @@
             }
 
             state.puppyEmotion = emotion;
+        }
+
+        /* Add this function after the setPuppyEmotion function */
+        function updatePuppyAppearance() {
+            // Remove all breed classes
+            elements.puppy.classList.remove('puppy-default', 'puppy-poodle', 'puppy-husky', 'puppy-corgi');
+
+            // Add the current breed class
+            elements.puppy.classList.add(`puppy-${state.puppyBreed}`);
+
+            // Update skin colors
+            const skinColor = `var(--puppy-skin-${state.puppySkin})`;
+            const darkSkinColor = state.puppySkin === 'spotted' ?
+                `var(--puppy-skin-black)` :
+                (state.puppySkin === 'white' ? `var(--puppy-skin-gray)` : skinColor);
+
+            // Apply skin colors to puppy parts
+            document.querySelector('.puppy-head').style.backgroundColor = skinColor;
+            document.querySelector('.puppy-body').style.backgroundColor = skinColor;
+            document.querySelector('.puppy-ear-right').style.backgroundColor = skinColor;
+
+            // For spotted skin, add the background image
+            if (state.puppySkin === 'spotted') {
+                document.querySelector('.puppy-head').style.backgroundImage = 'var(--puppy-skin-spotted)';
+                document.querySelector('.puppy-body').style.backgroundImage = 'var(--puppy-skin-spotted)';
+            } else {
+                document.querySelector('.puppy-head').style.backgroundImage = 'none';
+                document.querySelector('.puppy-body').style.backgroundImage = 'none';
+            }
+
+            // Dark parts (patch, left ear, tail)
+            document.querySelector('.puppy-patch').style.backgroundColor = darkSkinColor;
+            document.querySelector('.puppy-ear-left').style.backgroundColor = darkSkinColor;
+            document.querySelector('.puppy-tail').style.backgroundColor = darkSkinColor;
+
+            // Update leg colors
+            document.querySelector('.puppy-leg-front').style.backgroundColor = skinColor;
+            document.querySelector('.puppy-leg-back').style.backgroundColor = skinColor;
+
+            // Breed-specific customizations
+            if (state.puppyBreed === 'husky') {
+                // Husky has blue eyes
+                document.querySelector('.puppy-eye-left').style.backgroundColor = '#3498db';
+                document.querySelector('.puppy-eye-right').style.backgroundColor = '#3498db';
+                // Husky has a white patch regardless of skin color
+                document.querySelector('.puppy-patch').style.backgroundColor = 'white';
+            } else {
+                // Reset eye color for other breeds
+                document.querySelector('.puppy-eye-left').style.backgroundColor = 'black';
+                document.querySelector('.puppy-eye-right').style.backgroundColor = 'black';
+            }
         }
 
         // Puppy Animations
@@ -1907,6 +2400,41 @@
         elements.listeningBtn.addEventListener('click', puppyListen);
         elements.jumpingBtn.addEventListener('click', puppyJump);
 
+        /* Add event listeners for skin options */
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.skin-option')) {
+                const skinOption = e.target.closest('.skin-option');
+                const skin = skinOption.getAttribute('data-skin');
+                
+                // Update selected class
+                document.querySelectorAll('.skin-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                skinOption.classList.add('selected');
+                
+                // Update state
+                state.puppySkin = skin;
+                updatePuppyAppearance();
+                saveToLocalStorage();
+            }
+            
+            if (e.target.closest('.breed-option')) {
+                const breedOption = e.target.closest('.breed-option');
+                const breed = breedOption.getAttribute('data-breed');
+                
+                // Update selected class
+                document.querySelectorAll('.breed-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                breedOption.classList.add('selected');
+                
+                // Update state
+                state.puppyBreed = breed;
+                updatePuppyAppearance();
+                saveToLocalStorage();
+            }
+        });
+
         // Add this JavaScript to handle clicking on example bubbles
         // Add this after the emotion buttons event listeners
 
@@ -1950,6 +2478,20 @@
             
             // Ensure main screen is active
             showScreen('main-screen');
+
+            /* After loadFromLocalStorage() is called, add: */
+            // Mark the current skin and breed as selected
+            setTimeout(() => {
+                const currentSkinOption = document.querySelector(`.skin-option[data-skin="${state.puppySkin}"]`);
+                if (currentSkinOption) {
+                    currentSkinOption.classList.add('selected');
+                }
+                
+                const currentBreedOption = document.querySelector(`.breed-option[data-breed="${state.puppyBreed}"]`);
+                if (currentBreedOption) {
+                    currentBreedOption.classList.add('selected');
+                }
+            }, 100);
 
             // Make the puppy do a little animation on page load
             setTimeout(() => {

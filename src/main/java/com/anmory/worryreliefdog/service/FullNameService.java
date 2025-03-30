@@ -17,4 +17,8 @@ public class FullNameService {
     public int addFullName(int userId, String name) {
         return fullNameMapper.addFullName(userId, name);
     }
+
+    public String getFullName(int userId) {
+        return fullNameMapper.selectFullName(userId);
+    }
 }
